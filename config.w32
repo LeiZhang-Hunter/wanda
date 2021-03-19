@@ -1,0 +1,7 @@
+ARG_ENABLE('wanda', 'wanda support', 'no');
+
+if (PHP_WANDA != 'no') {
+	AC_DEFINE('HAVE_WANDA', 1, 'wanda support enabled');
+
+	EXTENSION('wanda', 'wanda.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
+}
