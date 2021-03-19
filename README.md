@@ -6,7 +6,7 @@
 作者：LeiZhang-Hunter
 - 底层HOOK：无侵入，hook了底层的curl系列函数和file_get_contents
 
-## 如何安装PHPWando
+## 如何安装PHPWanda
 ```
 git git@github.com:LeiZhang-Hunter/wanda.git
 phpize
