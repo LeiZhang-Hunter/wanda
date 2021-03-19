@@ -23,17 +23,29 @@ namespace Wanda {
 
         }
 
+        //是否启动
+        bool running = false;
+
+        /**
+         * 开启fpm模式
+         * @return
+         */
+        bool startFpmMode()
+        {
+            return fpmMode = true;
+        }
+
+        /**
+         * 加载请求参数
+         * @return
+         */
+        bool loadFpmParam();
+
         /**
          * 执行器入口
          * @return
          */
-        bool executor() final {
-            wandaCurl->executor();
-            wandaFileContent->executor();
-            wandaSwooleServer->executor();
-            wandaHttpClient->executor();
-            return true;
-        }
+        bool executor() final;
 
         ~ZendWanda() {
 
@@ -44,6 +56,7 @@ namespace Wanda {
         std::shared_ptr<Wanda::WandaFileContent> wandaFileContent;
         std::shared_ptr<Wanda::WandaSwooleServer> wandaSwooleServer;
         std::shared_ptr<Wanda::WandaSwooleHttpClient> wandaHttpClient;
+        bool fpmMode;
     };
 }
 

@@ -43,13 +43,7 @@ void Wanda::WandaFileContent::wandaFileGetContent(zend_execute_data *execute_dat
         return;
     }
 
-    if (url.find(WANDA_G(wandaFirstSplit)) != std::string::npos) {
-        //找到了要拼接?
-        url += (WANDA_G(wandaThenSplit) + WANDA_G(wandaParam) + "=");
-    } else {
-        //找不到了要拼接&
-        url += (WANDA_G(wandaFirstSplit) + WANDA_G(wandaParam) + "=");
-    }
+    url = WANDA_G(util)->getWandaUrl(url.c_str());
 
     //修改要传递进去的参数
     zval *param = ZEND_CALL_ARG(execute_data, 1);

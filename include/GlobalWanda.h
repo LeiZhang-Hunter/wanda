@@ -6,8 +6,8 @@
 #define PHPSCITER_GLOBALWANDA_H
 
 #include <memory>
-
-#include "include/ZendWanda.h"
+#include "WandaUtil.h"
+#include "ZendWanda.h"
 
 typedef struct _zend_wanda_globals {
     std::string wandaEnvValue = "default";
@@ -17,6 +17,7 @@ typedef struct _zend_wanda_globals {
     //后续分隔符
     std::string wandaThenSplit = "&";
     std::shared_ptr<Wanda::ZendWanda> wanda;
+    std::shared_ptr<Wanda::WandaUtil> util;
 } zend_wanda_globals;
 
 extern ZEND_DECLARE_MODULE_GLOBALS(wanda)

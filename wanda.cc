@@ -21,6 +21,10 @@ PHP_RINIT_FUNCTION(wanda)
 #if defined(ZTS) && defined(COMPILE_DL_WANDA)
 	ZEND_TSRMLS_CACHE_UPDATE();
 #endif
+    if (strcasecmp("cli", sapi_module.name) != 0) {
+        WANDA_G(wanda)->startFpmMode();
+        WANDA_G(wanda)->executor();
+    }
 
 	return SUCCESS;
 }
@@ -46,17 +50,21 @@ static const zend_function_entry wanda_functions[] = {
 PHP_GINIT_FUNCTION(wanda)
 {
     wanda_globals->wanda = std::make_shared<Wanda::ZendWanda>();
+    wanda_globals->util = std::make_shared<Wanda::WandaUtil>();
 }
 
 //
 PHP_GSHUTDOWN_FUNCTION(wanda)
 {
     wanda_globals->wanda.reset();
+    wanda_globals->util.reset();
 }
 
 PHP_MINIT_FUNCTION(wanda)
 {
-    WANDA_G(wanda)->executor();
+    if (strcasecmp("cli", sapi_module.name) == 0) {
+        WANDA_G(wanda)->executor();
+    }
     return SUCCESS;
 }
 

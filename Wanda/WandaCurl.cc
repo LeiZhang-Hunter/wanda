@@ -16,34 +16,28 @@ extern "C"
 //存在地址替换掉地址的值
 void Wanda::WandaCurl::wandaCurlInit(zend_execute_data *execute_data, zval *return_value) {
 
-    zend_string *url = nullptr;
     //修改要传递进去的参数
     if (!curlInitHandler) {
         return;
     }
-
+    int number = EX_NUM_ARGS();
     //查看是否有url参数
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|S", &url) == FAILURE) {
-        return;
-    }
-
-    //没有url直接传给旧地址处理
-    if (!url) {
+    if (number != 1) {
         curlInitHandler(execute_data, return_value);
         return;
     }
 
-    std::string copyUrl(ZSTR_VAL(url));
-    if (copyUrl.find(WANDA_G(wandaFirstSplit)) != std::string::npos) {
-        //找到了要拼接?
-        copyUrl += (WANDA_G(wandaThenSplit) + WANDA_G(wandaParam) + "=");
-    } else {
-        //找不到了要拼接&
-        copyUrl += (WANDA_G(wandaFirstSplit) + WANDA_G(wandaParam) + "=");
-    }
-
     //修改要传递进去的参数
     zval *param = ZEND_CALL_ARG(execute_data, 1);
+
+    if (Z_TYPE(*param) != IS_STRING) {
+        curlInitHandler(execute_data, return_value);
+        return;
+    }
+
+    std::string copyUrl = WANDA_G(util)->getWandaUrl(Z_STRVAL(*param));
+
+
     if (param) {
         ZVAL_STRING(param, copyUrl.c_str());
     }
@@ -71,14 +65,7 @@ void Wanda::WandaCurl::wandaCurlSetoption(zend_execute_data *execute_data, zval 
         return;
     }
 
-    std::string copyUrl(Z_STRVAL(*zvalue));
-    if (copyUrl.find(WANDA_G(wandaFirstSplit)) != std::string::npos) {
-        //找到了要拼接?
-        copyUrl += (WANDA_G(wandaThenSplit) + WANDA_G(wandaParam) + "=");
-    } else {
-        //找不到了要拼接&
-        copyUrl += (WANDA_G(wandaFirstSplit) + WANDA_G(wandaParam) + "=");
-    }
+    std::string copyUrl = WANDA_G(util)->getWandaUrl(Z_STRVAL(*zvalue));
 
     //修改要传递进去的参数
     zval *param = ZEND_CALL_ARG(execute_data, 3);

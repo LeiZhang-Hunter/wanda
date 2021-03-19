@@ -6,6 +6,7 @@
 #define WANDA_WANDACURL_H
 
 #include "WandaInterface.h"
+#include "WandaUtil.h"
 /**
  * WandaCurl的hook函数
  */
@@ -20,7 +21,6 @@ namespace Wanda {
     public:
         WandaCurl()
         {
-
         }
         static void wandaCurlInit(zend_execute_data *execute_data, zval *return_value);
 
@@ -33,18 +33,20 @@ namespace Wanda {
         //curl_setopt的函数地址
         zend_function *curlSetoptionFunction = nullptr;
 
+
         //复原
         ~WandaCurl()
         {
-            if (curlInitHandler) {
-                curlInitFunction->internal_function.handler = curlInitHandler;
-            }
-
-            if (curlSetoptionHandler) {
-                curlSetoptionFunction->internal_function.handler = curlSetoptionHandler;
-            }
+//            if (curlInitHandler) {
+//                curlInitFunction->internal_function.handler = curlInitHandler;
+//            }
+//
+//            if (curlSetoptionHandler) {
+//                curlSetoptionFunction->internal_function.handler = curlSetoptionHandler;
+//            }
         }
     private:
+
 
     };
 }

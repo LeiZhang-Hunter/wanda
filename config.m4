@@ -107,6 +107,7 @@ if test "$PHP_WANDA" != "no"; then
   Wanda/WandaFileContent.cc \
   Wanda/WandaSwooleHttpClient.cc \
   Wanda/WandaSwooleServer.cc \
-  ZendWanda.cc"
+  Wanda/WandaUtil.cc \
+  Wanda/ZendWanda.cc"
   PHP_NEW_EXTENSION(wanda, $source_file, $ext_shared)
 fi
