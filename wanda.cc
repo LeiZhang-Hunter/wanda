@@ -5,6 +5,7 @@
 #endif
 
 #include "php_wanda.h"
+#include "WandaHook.h"
 /* For compatibility with older PHP versions */
 #ifndef ZEND_PARSE_PARAMETERS_NONE
 #define ZEND_PARSE_PARAMETERS_NONE() \
@@ -62,6 +63,7 @@ PHP_GSHUTDOWN_FUNCTION(wanda)
 
 PHP_MINIT_FUNCTION(wanda)
 {
+    load_wanda_hook();
     if (strcasecmp("cli", sapi_module.name) == 0) {
         WANDA_G(wanda)->executor();
     }

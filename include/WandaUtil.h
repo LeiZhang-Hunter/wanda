@@ -11,7 +11,7 @@
 namespace Wanda {
     class WandaUtil {
     public:
-        std::string getWandaUrl(const char* url);
+        std::string getWandaUrl(const char *url);
     };
 }
 

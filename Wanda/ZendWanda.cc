@@ -6,10 +6,17 @@ extern "C"
 #include <php.h>
 #include <Zend/zend_API.h>
 #include <Zend/zend_string.h>
+#include <Zend/zend_modules.h>
 }
 
 #include "GlobalWanda.h"
 #include "ZendWanda.h"
+
+bool Wanda::ZendWanda::startFpmMode()
+{
+    WANDA_G(fpm_mode) = true;
+    return true;
+}
 
 bool Wanda::ZendWanda::loadFpmParam() {
     //获取get参数
@@ -43,21 +50,37 @@ bool Wanda::ZendWanda::loadFpmParam() {
 
 bool Wanda::ZendWanda::executor() {
 
+    if (running) {
+        return true;
+    }
+
     //加载fpm的启动参数
-    if (fpmMode) {
+    if (WANDA_G(fpm_mode)) {
         if (!loadFpmParam()) {
             return false;
         }
     }
 
-    if (running) {
-        return true;
+    zend_string* extension_name = zend_string_init("swoole", strlen("swoole"), 0);
+
+    //检查swoole扩展是否存在
+    if (zend_hash_exists(&module_registry, extension_name)) {
+        WANDA_G(swoole_enable) = true;
+        //hook coro
+        wandaSwooleCoroutine->executor();
+
+        //hook swoole server
+        wandaSwooleServer->executor();
+
+        //hook httpClient
+        wandaHttpClient->executor();
     }
 
+    //hook curl
     wandaCurl->executor();
+
+    //hook file_get_contents
     wandaFileContent->executor();
-    wandaSwooleServer->executor();
-    wandaHttpClient->executor();
 
     running = true;
     return true;

@@ -11,6 +11,7 @@
 #include "WandaFileContent.h"
 #include "WandaSwooleServer.h"
 #include "WandaSwooleHttpClient.h"
+#include "WandaSwooleCoroutine.h"
 
 namespace Wanda {
     class ZendWanda : public WandaInterface {
@@ -19,7 +20,8 @@ namespace Wanda {
                 : wandaCurl(std::make_shared<Wanda::WandaCurl>()),
                   wandaFileContent(std::make_shared<Wanda::WandaFileContent>()),
                   wandaSwooleServer(std::make_shared<Wanda::WandaSwooleServer>()),
-                  wandaHttpClient(std::make_shared<Wanda::WandaSwooleHttpClient>()) {
+                  wandaHttpClient(std::make_shared<Wanda::WandaSwooleHttpClient>()),
+                  wandaSwooleCoroutine(std::make_shared<Wanda::WandaSwooleCoroutine>()){
 
         }
 
@@ -30,10 +32,7 @@ namespace Wanda {
          * 开启fpm模式
          * @return
          */
-        bool startFpmMode()
-        {
-            return fpmMode = true;
-        }
+        bool startFpmMode();
 
         /**
          * 加载请求参数
@@ -56,7 +55,7 @@ namespace Wanda {
         std::shared_ptr<Wanda::WandaFileContent> wandaFileContent;
         std::shared_ptr<Wanda::WandaSwooleServer> wandaSwooleServer;
         std::shared_ptr<Wanda::WandaSwooleHttpClient> wandaHttpClient;
-        bool fpmMode;
+        std::shared_ptr<Wanda::WandaSwooleCoroutine> wandaSwooleCoroutine;
     };
 }
 

@@ -8,19 +8,16 @@
 /**
  * 抽象接口类
  */
-namespace Wanda
-{
-    class WandaInterface
-    {
+namespace Wanda {
+    class WandaInterface {
     public:
-        WandaInterface()
-        {
+        WandaInterface() {
 
         }
+
         virtual bool executor() = 0;
 
-        ~WandaInterface()
-        {
+        ~WandaInterface() {
 
         }
     };

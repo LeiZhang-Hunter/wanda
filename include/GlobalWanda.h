@@ -6,10 +6,13 @@
 #define PHPSCITER_GLOBALWANDA_H
 
 #include <memory>
+#include <unordered_map>
 #include "WandaUtil.h"
 #include "ZendWanda.h"
 
 typedef struct _zend_wanda_globals {
+    bool swoole_enable = false;
+    bool fpm_mode = false;
     std::string wandaEnvValue = "default";
     std::string wandaParam = "WandaVirtualEnv";
     //首字符
@@ -18,6 +21,8 @@ typedef struct _zend_wanda_globals {
     std::string wandaThenSplit = "&";
     std::shared_ptr<Wanda::ZendWanda> wanda;
     std::shared_ptr<Wanda::WandaUtil> util;
+    //记录协程里的wanda环境信息
+    std::unordered_map<long, std::string> wandaCoroutine;
 } zend_wanda_globals;
 
 extern ZEND_DECLARE_MODULE_GLOBALS(wanda)

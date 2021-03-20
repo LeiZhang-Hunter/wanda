@@ -5,6 +5,7 @@
 
 作者：LeiZhang-Hunter
 - 底层HOOK：无侵入，hook了底层的curl系列函数和file_get_contents
+- 支持swoole协程、支持fpm，支持阻塞模式
 
 ## 如何安装PHPWanda
 ```
@@ -14,10 +15,4 @@ phpize
 make
 make install
 ```
-
-#### 注意事项
-
-1.现阶段还未支持swoole相关项目环境的隔离测试
-
-2.php请使用7以上的版本
 
