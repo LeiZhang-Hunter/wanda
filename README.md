@@ -5,7 +5,7 @@
 
 作者：LeiZhang-Hunter
 - 底层HOOK：无侵入，hook了底层的curl系列函数和file_get_contents
-- 支持swoole协程、支持fpm，支持阻塞模式
+- 支持swoole协程、支持fpm，支持阻塞模式,支持swoole的Http的server和client
 
 ## 如何安装PHPWanda
 ```
