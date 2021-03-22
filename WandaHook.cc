@@ -65,6 +65,7 @@ PHP_METHOD(WandaHook, proxy)
     zval wandaHookDefer;
     zval retValue;
     array_init(&wandaHookDefer);
+    zval_add_ref(getThis());
     zend_hash_index_add(HASH_OF(&wandaHookDefer), 0, getThis());
     zend_hash_index_add(HASH_OF(&wandaHookDefer), 1, &function_name);
     zval realParams[1];
@@ -86,10 +87,7 @@ PHP_METHOD(WandaHook, proxy)
     }
 
 
-    zval_dtor(&function_name);
-    zval_dtor(&wandaHookDefer);
-    zval_dtor(&retValue);
-
+    zval_ptr_dtor(&wandaHookDefer);
 }
 
 /**
@@ -118,6 +116,7 @@ PHP_METHOD(WandaHook, httpProxy)
     zval wandaHookDefer;
     zval retValue;
     array_init(&wandaHookDefer);
+    zval_add_ref(getThis());
     zend_hash_index_add(HASH_OF(&wandaHookDefer), 0, getThis());
     zend_hash_index_add(HASH_OF(&wandaHookDefer), 1, &function_name);
     zval realParams[1];
@@ -152,8 +151,7 @@ PHP_METHOD(WandaHook, httpProxy)
     }
 
 
-    zval_dtor(&function_name);
-    zval_dtor(&retValue);
+    zval_ptr_dtor(&wandaHookDefer);
 
 }
 

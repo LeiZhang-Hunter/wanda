@@ -77,10 +77,11 @@ void Wanda::WandaSwooleCoroutine::wandaHookDispatcher(zend_execute_data *execute
     swooleCreatorHandler(execute_data, return_value);
 
     //释放内存防止内存泄露
-    zval_ptr_dtor(&object);
-    zval_ptr_dtor(&methodName);
+
+//    zval_ptr_dtor(param);
+
     zval_ptr_dtor(&wandaHook);
-    zval_ptr_dtor(param);
+//    zval_ptr_dtor(param);
 }
 void Wanda::WandaSwooleCoroutine::wandaCreatorHandler(zend_execute_data *execute_data, zval *return_value)
 {
