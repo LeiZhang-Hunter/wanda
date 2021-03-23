@@ -7,6 +7,7 @@ extern "C"
 #include <php.h>
 #include <Zend/zend_interfaces.h>
 }
+
 #include "WandaSwooleCoroutine.h"
 #include "WandaSwooleServer.h"
 #include "WandaHook.h"
@@ -21,8 +22,27 @@ void Wanda::WandaSwooleServer::wandaSwooleHttpServerHandler1(zend_execute_data *
     zend_fcall_info fci;
     zend_fcall_info_cache fci_cache;
 
+    //事件名字
+    zval *eventName = ZEND_CALL_ARG(execute_data, 1);
     //修改要传递进去的参数
     zval *param = ZEND_CALL_ARG(execute_data, 2);
+
+    if (!eventName) {
+        swooleHttpServerOn(execute_data, return_value);
+        return;
+    }
+
+    if (Z_TYPE(*eventName) != IS_STRING) {
+        swooleHttpServerOn(execute_data, return_value);
+        return;
+    }
+
+    //只是处理onrequest
+    zend_string* eventNameString = zend_string_tolower(Z_STR(*eventName));
+    if (strcasecmp(eventNameString->val, "request") != 0) {
+        swooleHttpServerOn(execute_data, return_value);
+        return;
+    }
 
     //拷贝原来的参数到钩子里
     zval object;

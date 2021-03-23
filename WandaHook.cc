@@ -132,7 +132,6 @@ PHP_METHOD(WandaHook, httpProxy)
                 WANDA_G(wandaCoroutine)[coroutineId] = Z_STRVAL(*wandaValue);
             }
         }
-
     }
 
     //注入Wanda的defer
