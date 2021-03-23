@@ -48,8 +48,6 @@ void Wanda::WandaSwooleServer::wandaSwooleHttpServerHandler1(zend_execute_data *
     swooleHttpServerOn(execute_data, return_value);
 
     //释放内存防止内存泄露
-//    zval_ptr_dtor(&object);
-    zval_ptr_dtor(&methodName);
     zval_ptr_dtor(&wandaHook);
 //    zval_ptr_dtor(param);
     return;
