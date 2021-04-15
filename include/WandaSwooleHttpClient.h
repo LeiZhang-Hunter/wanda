@@ -11,12 +11,18 @@
  */
 namespace Wanda {
     static void ZEND_FASTCALL (*swooleHttpClientHandler)(zend_execute_data *execute_data, zval *return_value) = nullptr;
+    static void ZEND_FASTCALL (*swooleHttpClientPostHandler)(zend_execute_data *execute_data, zval *return_value) = nullptr;
 
 
     class WandaSwooleHttpClient : public WandaInterface {
     public:
         //hook掉swoole协程http的client
         static void wandaSwooleHandler(zend_execute_data *execute_data, zval *return_value);
+
+        //hook掉swoole协程http的post的client
+        static void wandaSwoolePostHandler(zend_execute_data *execute_data, zval *return_value);
+
+        
 
         zend_function *swooleHttpClientFunction;
 

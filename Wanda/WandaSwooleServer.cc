@@ -7,7 +7,7 @@ extern "C"
 #include <php.h>
 #include <Zend/zend_interfaces.h>
 }
-
+#include <iostream>
 #include "WandaSwooleCoroutine.h"
 #include "WandaSwooleServer.h"
 #include "WandaHook.h"

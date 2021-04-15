@@ -2,12 +2,12 @@
 
 use Swoole\Coroutine\Http\Client;
 use function Swoole\Coroutine\run;
-class A{
-};
-$a = new A();
-run(function () use ($a){
-    $cli = new Client('httpbin.org', 80);
-    $cli->recv(null);
-    echo $cli->body;
-    $cli->close();
+
+run(function () {
+    $httpClient = new Client('httpbin.org', 80);
+    $httpClient->setMethod('POST');
+    $httpClient->setData('swoole');
+    $status = $httpClient->post('/post', []);
+    var_dump($httpClient->body);
+    var_dump($status);
 });

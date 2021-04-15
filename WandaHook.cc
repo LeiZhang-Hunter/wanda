@@ -99,28 +99,6 @@ PHP_METHOD(WandaHook, httpProxy)
 {
     //协程id
     long coroutineId = Wanda::WandaSwooleCoroutine::getCoroutineId();
-    if (coroutineId == -1) {
-        return;
-    }
-
-    WANDA_G(wandaCoroutine)[coroutineId] = WANDA_G(wandaEnvValue);
-
-    //创建defer
-    zval function_name;
-    ZVAL_STRING(&function_name, "defer");
-
-    zval* originalHook = zend_read_property(wanda_hook_ce, getThis(),
-                                            WANDA_ORIGINAL_CLOSURE, strlen(WANDA_ORIGINAL_CLOSURE), 0, nullptr);
-
-    //组成hook defer的名字
-    zval wandaHookDefer;
-    zval retValue;
-    array_init(&wandaHookDefer);
-    zval_add_ref(getThis());
-    zend_hash_index_add(HASH_OF(&wandaHookDefer), 0, getThis());
-    zend_hash_index_add(HASH_OF(&wandaHookDefer), 1, &function_name);
-    zval realParams[1];
-    realParams[0] = wandaHookDefer;
 
     //检查get参数是否有分离的参数
     zval* requestObject = ZEND_CALL_ARG(execute_data, 1);
@@ -129,15 +107,43 @@ PHP_METHOD(WandaHook, httpProxy)
         if (getObject && (Z_TYPE(*getObject) == IS_ARRAY)) {
             zval* wandaValue = zend_hash_str_find(HASH_OF(getObject), WANDA_G(wandaParam).c_str(), WANDA_G(wandaParam).length());
             if (wandaValue && (Z_TYPE(*wandaValue) == IS_STRING)) {
-                WANDA_G(wandaCoroutine)[coroutineId] = Z_STRVAL(*wandaValue);
+                if (coroutineId != -1) {
+                    WANDA_G(wandaCoroutine)[coroutineId] = Z_STRVAL(*wandaValue);
+                } else {
+                    WANDA_G(wandaEnvValue) = Z_STRVAL(*wandaValue);
+                }
             }
         }
     }
 
-    //注入Wanda的defer
-    call_user_function(CG(function_table), nullptr, &function_name,
-                       &retValue,
-                       1, realParams);
+    if (coroutineId != -1) {
+        WANDA_G(wandaCoroutine)[coroutineId] = WANDA_G(wandaEnvValue);
+
+        //创建defer
+        zval function_name;
+        ZVAL_STRING(&function_name, "defer");
+
+
+        //组成hook defer的名字
+        zval wandaHookDefer;
+        zval retValue;
+        array_init(&wandaHookDefer);
+        zval_add_ref(getThis());
+        zend_hash_index_add(HASH_OF(&wandaHookDefer), 0, getThis());
+        zend_hash_index_add(HASH_OF(&wandaHookDefer), 1, &function_name);
+        zval realParams[1];
+        realParams[0] = wandaHookDefer;
+
+        //注入Wanda的defer
+        call_user_function(CG(function_table), nullptr, &function_name,
+                           &retValue,
+                           1, realParams);
+
+        zval_ptr_dtor(&wandaHookDefer);
+    }
+
+    zval* originalHook = zend_read_property(wanda_hook_ce, getThis(),
+                                            WANDA_ORIGINAL_CLOSURE, strlen(WANDA_ORIGINAL_CLOSURE), 0, nullptr);
 
     if (originalHook && (Z_TYPE(*originalHook) != IS_NULL)) {
         int paramCount = ZEND_CALL_NUM_ARGS(execute_data);
@@ -148,10 +154,6 @@ PHP_METHOD(WandaHook, httpProxy)
                               paramCount,
                               args, 0, nullptr);
     }
-
-
-    zval_ptr_dtor(&wandaHookDefer);
-
 }
 
 /**
